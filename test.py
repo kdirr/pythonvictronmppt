@@ -11,31 +11,32 @@ def get_data(serial_port="/dev/ttyUSB0", serial_speed=19200, lines_to_read=20, t
             result = read_serial(s)
 
 def read_serial(conn):
-    byte_counter = 0
+    byte_sum = 0
     msg = b''
-    start = False
-    while True:
-        byte = conn.read()
-        for b in byte:
-            byte_counter += b
-        msg += byte
-        #print(s.readline())
-        if start == False and msg.endswith(b'\r\n'):
-            msg = b''
-            #byte_counter = 0
-            start = True
-        if msg.endswith(b'Checksum\t'):
-            print("found checksum")
-            #msg = msg.removesuffix(b'\r\nChecksum\t')
-            byte = conn.read()
-            for b in byte:
-                byte_counter += b
-            msg += byte
-            break
+    msg_start = False
+    msg_stop = False
 
-    checksum = byte_counter % 256
-    print(checksum)
-    print(msg)
+    while not msg_stop:
+        # stop reading when reaching checksum field
+        if msg.endswith(b'Checksum\t'):
+            msg_stop = True
+
+        # read single byte and append it to msg
+        byte = conn.read()
+        msg += byte
+
+        # necessary for whatever reason
+        for b in byte:
+            byte_sum += b
+        
+        # reset recorded msg on message start
+        if msg_start == False and msg.endswith(b'\r\n'):
+            msg = b''
+            msg_start = True
+
+    # calculate checksum
+    checksum = byte_sum % 256
+
     if checksum == 0:
         return msg
     else:
