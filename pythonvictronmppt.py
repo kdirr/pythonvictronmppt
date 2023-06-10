@@ -35,7 +35,6 @@ class pythonvictronmppt:
             # stop reading when reaching checksum field
             if msg.endswith(b'Checksum\t'):
                 msg_stop = True
-                print("found checksum")
 
             # read single byte and append it to msg
             byte = conn.read()
@@ -51,8 +50,6 @@ class pythonvictronmppt:
                 msg_start = True
 
         # calculate checksum
-        print(byte_sum % 256)
-        print(msg)
         if (byte_sum % 256) == 0:
             return msg
         else:
