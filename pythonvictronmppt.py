@@ -6,21 +6,26 @@ class pythonvictronmppt:
     def __init__(self, serial_port: str = '/dev/ttyUSB0', speed: int = 19200) -> None:
         self.serial_port = serial_port
         self.serial_speed = speed
+        self.raw_msg = None
+        self.max_retries = 10
     
     
 
-    def get_data(self):
+    def read_data(self):
         """
         reads data from the serial port the solar charge controller is connected to and filters it after given regex.
         returns a match object if the regex matched or none if not.
         """
         with serial.Serial(self.serial_port, self.serial_speed, timeout=None, bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE) as s:
-            result = None
-            while not result:
-                result = self.read_serial(s)
-                
+            counter = 0
+            while not self.raw_msg:
+                self.raw_msg = self._read_serial_data(s)
+                counter += 1
+                if counter >= self.max_retries:
+                    break
 
-    def read_serial(self, conn):
+
+    def _read_serial_data(self, conn):
         byte_sum = 0
         msg = b''
         msg_start = False
@@ -30,6 +35,7 @@ class pythonvictronmppt:
             # stop reading when reaching checksum field
             if msg.endswith(b'Checksum\t'):
                 msg_stop = True
+                print("found checksum")
 
             # read single byte and append it to msg
             byte = conn.read()
@@ -45,6 +51,8 @@ class pythonvictronmppt:
                 msg_start = True
 
         # calculate checksum
+        print(byte_sum % 256)
+        print(msg)
         if (byte_sum % 256) == 0:
             return msg
         else:
