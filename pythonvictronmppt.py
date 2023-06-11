@@ -8,23 +8,50 @@ class pythonvictronmppt:
         self.serial_speed = speed
         self.raw_msg = None
         self.max_retries = 10
+        self.msg = None
     
     
 
     def read_data(self):
         """
-        reads data from the serial port the solar charge controller is connected to.
+        read one message block from the connected device.
+
+        Returns
+        -------
+        None 
+            if no valid message is retrieved after more than x retries
+        dict 
+            if valid message was received
         """
         with serial.Serial(self.serial_port, self.serial_speed, timeout=None, bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE) as s:
             counter = 0
             while not self.raw_msg:
                 self.raw_msg = self._read_serial_data(s)
                 counter += 1
+                if self.raw_msg:
+                    self.msg = self._dict_from_raw_data(self.raw_msg)
+                    return self.msg
                 if counter >= self.max_retries:
-                    break
+                    return None
+                    
 
 
     def _read_serial_data(self, conn):
+        """
+        Read raw data from serial connection
+
+        Parameters
+        ----------
+        conn : Serial
+            Serial port connection
+
+        Returns
+        -------
+        None
+            If checksum of retrieved message is not valid.
+        bytes
+            Entire message as bytes if the checksum was valid.
+        """
         byte_sum = 0
         msg = b''
         msg_start = False
@@ -56,7 +83,17 @@ class pythonvictronmppt:
     
     def _dict_from_raw_data(self, raw_data: bytes):
         """
-        converts the given raw data from MPPT controller into a dictionary
+        converts the given raw data from _read_serial_data() into a dictionary
+
+        Parameters
+        ----------
+        raw_data : bytes
+            bytes containing the message from Solar Charger
+
+        Returns
+        -------
+        dict
+            dict with all keys and values as strings
         """
         data_dict = {}
         lines = raw_data.splitlines()
