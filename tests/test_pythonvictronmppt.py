@@ -1,11 +1,11 @@
 import unittest
-from pythonvictronmppt import pythonvictronmppt
+from pythonvictronmppt.pythonvictronmppt import pythonvictronmppt
 from unittest.mock import Mock
 
 class TestSerialReader(unittest.TestCase):
     def setUp(self) -> None:
         self.test_data = []
-        with open("test_data.txt", mode="rb") as test_data_file:
+        with open("tests/test_data.txt", mode="rb") as test_data_file:
             byte = test_data_file.read(1)
             while byte:
                 self.test_data.append(byte)

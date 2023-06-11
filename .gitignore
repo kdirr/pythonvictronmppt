@@ -5,3 +5,4 @@ pythonvictronmppt_venv
 build
 dist
 *.egg
+*.egg-info
