@@ -13,8 +13,7 @@ class pythonvictronmppt:
 
     def read_data(self):
         """
-        reads data from the serial port the solar charge controller is connected to and filters it after given regex.
-        returns a match object if the regex matched or none if not.
+        reads data from the serial port the solar charge controller is connected to.
         """
         with serial.Serial(self.serial_port, self.serial_speed, timeout=None, bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE) as s:
             counter = 0
@@ -54,5 +53,16 @@ class pythonvictronmppt:
             return msg
         else:
             return None
+    
+    def _dict_from_raw_data(self, raw_data: bytes):
+        """
+        converts the given raw data from MPPT controller into a dictionary
+        """
+        data_dict = {}
+        lines = raw_data.splitlines()
+        for line in lines:
+            key_value = line.split(b'\t')
+            data_dict[key_value[0].decode('cp1252')] = key_value[1].decode('cp1252')
+        return data_dict
 
 
