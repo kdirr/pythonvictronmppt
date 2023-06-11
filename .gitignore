@@ -2,3 +2,6 @@ __pycache__
 .vscode
 pythonvictronmppt_venv
 2_test.py
+build
+dist
+*.egg
