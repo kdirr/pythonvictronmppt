@@ -17,12 +17,11 @@ class pythonvictronmppt:
         self.serial_port = serial_port
         self.serial_speed = speed
         self.raw_msg = None
-        self.max_retries = 10
         self.msg = None
     
     
 
-    def read_data(self):
+    def read_data(self, max_retries=10):
         """
         read one message block from the connected device.
 
@@ -41,7 +40,7 @@ class pythonvictronmppt:
                 if self.raw_msg:
                     self.msg = self._dict_from_raw_data(self.raw_msg)
                     return self.msg
-                if counter >= self.max_retries:
+                if counter >= max_retries:
                     return None
                     
 
