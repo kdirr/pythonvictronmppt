@@ -1,4 +1,9 @@
-from setuptools import setup, find_packages
+'''
+ # @ Author: Konstantin Dirr
+ # @ Create Time: 2023-06-11
+ '''
+
+from setuptools import setup
 
 setup(
     name = "pythonvictronmppt",

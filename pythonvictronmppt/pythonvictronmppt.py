@@ -1,7 +1,17 @@
+'''
+ # @ Author: Konstantin Dirr
+ # @ Create Time: 2023-06-10
+ '''
+
 import serial
 
 
 class pythonvictronmppt:
+    """
+    Simple python class for reading data sent via ve.direct serial protocol into a dict.
+
+    To do so, simply create an instance and run instance.read_data()
+    """
 
     def __init__(self, serial_port: str = '/dev/ttyUSB0', speed: int = 19200) -> None:
         self.serial_port = serial_port
