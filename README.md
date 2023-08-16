@@ -1,6 +1,6 @@
 # pythonvicrtonmppt
 
-pythonvictronmppt is a simple python class for reading data sent by victron devices via ve.direct text protocol into a dict.
+pythonvictronmppt is a simple python class for reading data sent by victron devices via ve.direct text protocol on a serial port into a dict.
 
 ## Installation
 
