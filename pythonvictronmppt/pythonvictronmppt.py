@@ -108,7 +108,10 @@ class pythonvictronmppt:
         lines = raw_data.splitlines()
         for line in lines:
             key_value = line.split(b'\t')
-            data_dict[key_value[0].decode('cp1252')] = key_value[1].decode('cp1252')
+            if key_value[0] == b'Checksum':
+                continue
+            else:
+                data_dict[key_value[0].decode('cp1252')] = key_value[1].decode('cp1252')
         return data_dict
 
 

@@ -36,9 +36,7 @@ class TestSerialReader(unittest.TestCase):
             "H21": "97",
             "H22": "37",
             "H23": "88",
-            "HSDS": "125",
-            "Checksum": "a"
-
+            "HSDS": "125"
         }
 
         
