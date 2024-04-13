@@ -7,7 +7,7 @@ from setuptools import setup
 
 setup(
     name = "pythonvictronmppt",
-    version = "0.0.1",
+    version = "0.0.2",
     author = "Konstantin Dirr",
     author_email = "k.dirr@beo-software.de",
     description = ("Minimal python class for parsing statistics data from Victron devices using VE.Direct protocol via serial port."),
